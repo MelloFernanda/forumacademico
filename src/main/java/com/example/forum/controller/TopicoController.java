@@ -6,10 +6,12 @@ import com.example.forum.modelo.Topico;
 import com.example.forum.repository.CursoRepository;
 import com.example.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -35,11 +37,11 @@ public class TopicoController {
     }
 
     @PostMapping
-    public ResponseEntity<TopicoDto> cadatrar (@RequestBody TopicoForm form, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<TopicoDto> cadatrar (@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder){
         Topico topico = form.converter(cursoRepository);
         topicoRepository.save(topico);
 
-        URI uri = uriBuilder.path("/topicos/{id").buildAndExpand(topico.getId()).toUri();
+        URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
         return ResponseEntity.created(uri).body(new TopicoDto(topico));
     }
 }
